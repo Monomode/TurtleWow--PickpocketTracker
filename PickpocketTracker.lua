@@ -1,8 +1,9 @@
-
 local f = CreateFrame("Frame")
 
 -- track before/after coin to detect how much was stolen
 local lastMoney = GetMoney()
+local sessionMoney = 0
+local sessionItems = {}
 
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("PLAYER_MONEY")
@@ -19,6 +20,21 @@ local function formatMoney(copper)
     return str
 end
 
+local function Print(msg)
+    DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99[Pickpocket]|r " .. msg)
+end
+
+-- Slash command: /pp
+SLASH_PICKPOCKET1 = "/pp"
+SlashCmdList["PICKPOCKET"] = function()
+    Print("Session summary:")
+    Print("  Gold stolen: " .. formatMoney(sessionMoney))
+    Print("  Items looted: " .. #sessionItems)
+    for _, item in ipairs(sessionItems) do
+        Print("   - " .. item)
+    end
+end
+
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         lastMoney = GetMoney()
@@ -27,9 +43,9 @@ f:SetScript("OnEvent", function(self, event, ...)
         local currentMoney = GetMoney()
         local diff = currentMoney - lastMoney
         if diff > 0 then
-            -- Only show if this gain came from pickpocket loot window
             if LootFrame:IsShown() and IsStealthed() then
-                DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99[Pickpocket]|r Stole " .. formatMoney(diff))
+                sessionMoney = sessionMoney + diff
+                Print("Stole " .. formatMoney(diff))
             end
         end
         lastMoney = currentMoney
@@ -40,7 +56,8 @@ f:SetScript("OnEvent", function(self, event, ...)
                 local itemLink = GetLootSlotLink(i)
                 local _, _, _, _, locked = GetLootSlotInfo(i)
                 if itemLink and not locked then
-                    DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99[Pickpocket]|r Looted " .. itemLink)
+                    table.insert(sessionItems, itemLink)
+                    Print("Looted " .. itemLink)
                 end
             end
         end
