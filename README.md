@@ -2,22 +2,24 @@ Pickpocket Tracker - Turtle WoW Addon
 -------------------------------------
 
 Author: Monomoy
-Version: 1.1
+Version: 1.3
 Interface: 11200
 
 Description:
 ------------
 This addon displays how much gold and which items you steal when using the
 Pick Pocket ability. By default in WoW 1.12 / Turtle WoW, stolen coins do not
-show in chat. This addon restores that feedback and now tracks totals per
-session.
+show in chat. This addon restores that feedback, tracks totals, and adds a
+session timer.
 
 Features:
 ---------
 - Prints a chat message whenever you pickpocket coins (e.g., "Stole 12s 50c").
 - Prints a chat message for each stolen item (e.g., "Looted Flash Powder").
 - Tracks total gold and items stolen per session.
-- Slash command **/pp** to show a session summary.
+- Tracks elapsed session time.
+- Slash command **/pp** shows a session summary.
+- Slash command **/pp reset** clears your session totals and timer.
 
 Installation:
 -------------
@@ -37,10 +39,8 @@ Usage:
 ------
 - Enter Stealth and use Pick Pocket on humanoid mobs.
 - When you loot coins/items, the addon will print messages in chat.
-- Type **/pp** to see a session summary:
-    * Total gold stolen
-    * Total items looted
-    * List of all items looted this session
+- Type **/pp** to see a session summary (time, gold, items).
+- Type **/pp reset** to clear your session and start fresh.
 
 Example Output:
 ---------------
@@ -50,11 +50,15 @@ Example Output:
 
 /pp command output:
 [Pickpocket] Session summary:
+[Pickpocket]   Time: 32m 15s
 [Pickpocket]   Gold stolen: 5g 34s 10c
 [Pickpocket]   Items looted: 3
 [Pickpocket]    - Flash Powder
 [Pickpocket]    - Heavy Junkbox
 [Pickpocket]    - Lockpick
+
+/pp reset command:
+[Pickpocket] Session has been reset.
 
 Notes:
 ------
