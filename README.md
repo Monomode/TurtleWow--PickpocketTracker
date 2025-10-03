@@ -1,9 +1,9 @@
 Pickpocket Tracker - Turtle WoW Addon
 -------------------------------------
 
-Author: Monomoy
-Version: 1.3
-Interface: 11200
+- Author: Monomoy
+- Version: 1.3
+- Interface: 11200
 
 Description:
 ------------
