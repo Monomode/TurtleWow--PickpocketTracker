@@ -4,6 +4,7 @@ local f = CreateFrame("Frame")
 local lastMoney = GetMoney()
 local sessionMoney = 0
 local sessionItems = {}
+local sessionStart = time()
 
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("PLAYER_MONEY")
@@ -20,14 +21,40 @@ local function formatMoney(copper)
     return str
 end
 
+local function formatTime(seconds)
+    local h = floor(seconds / 3600)
+    local m = floor((seconds % 3600) / 60)
+    local s = seconds % 60
+    if h > 0 then
+        return string.format("%dh %dm %ds", h, m, s)
+    elseif m > 0 then
+        return string.format("%dm %ds", m, s)
+    else
+        return string.format("%ds", s)
+    end
+end
+
 local function Print(msg)
     DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99[Pickpocket]|r " .. msg)
 end
 
 -- Slash command: /pp
 SLASH_PICKPOCKET1 = "/pp"
-SlashCmdList["PICKPOCKET"] = function()
+SlashCmdList["PICKPOCKET"] = function(msg)
+    msg = string.lower(msg or "")
+
+    if msg == "reset" then
+        sessionMoney = 0
+        sessionItems = {}
+        sessionStart = time()
+        Print("Session has been reset.")
+        return
+    end
+
+    -- Default: show summary
+    local elapsed = time() - sessionStart
     Print("Session summary:")
+    Print("  Time: " .. formatTime(elapsed))
     Print("  Gold stolen: " .. formatMoney(sessionMoney))
     Print("  Items looted: " .. #sessionItems)
     for _, item in ipairs(sessionItems) do
@@ -38,6 +65,7 @@ end
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         lastMoney = GetMoney()
+        sessionStart = time()
 
     elseif event == "PLAYER_MONEY" then
         local currentMoney = GetMoney()
