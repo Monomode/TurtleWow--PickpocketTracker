@@ -1,1 +1,6 @@
+## Interface: 11200
+## Title: Pickpocket Tracker
+## Notes: Shows how much gold/items you steal when pickpocketing
+## Author: ChatGPT
+PickpocketTracker.lua
 
